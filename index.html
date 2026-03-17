@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>FCT Confidential Viewer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#f5f5f5;
+}
+
+header{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:10px;
+background:white;
+padding:10px;
+border-bottom:2px solid #ddd;
+}
+
+header img{
+height:40px;
+}
+
+#login{
+max-width:350px;
+margin:80px auto;
+background:white;
+padding:25px;
+border-radius:8px;
+text-align:center;
+}
+
+input{
+width:100%;
+padding:10px;
+font-size:16px;
+margin-top:10px;
+}
+
+button{
+margin-top:15px;
+padding:10px 20px;
+font-size:16px;
+cursor:pointer;
+}
+
+#viewer{
+display:none;
+height:90vh;
+}
+
+iframe{
+width:100%;
+height:100%;
+border:none;
+}
+
+.watermark{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%) rotate(-30deg);
+font-size:50px;
+color:rgba(200,0,0,0.15);
+pointer-events:none;
+}
+
+</style>
+</head>
+
+<body oncontextmenu="return false">
+
+<header>
+<img src="logo.png">
+<b>Fine Components and Tools Pvt. Ltd.</b>
+</header>
+
+<div id="login">
+
+<h3>Welcome to FCT</h3>
+<p>Enter Password</p>
+
+<input type="password" id="pass">
+<button onclick="check()">Submit</button>
+
+<p id="msg" style="color:red"></p>
+
+</div>
+
+<div id="viewer">
+
+<div class="watermark">CONFIDENTIAL - FCT</div>
+
+<iframe id="frame"></iframe>
+
+</div>
+
+<script>
+
+const PASSWORD="fctfct";
+
+function getFile(){
+
+const params=new URLSearchParams(window.location.search);
+
+return params.get("file");
+
+}
+
+function check(){
+
+let entered=document.getElementById("pass").value;
+
+if(entered!==PASSWORD){
+
+document.getElementById("msg").innerText="Incorrect password";
+
+return;
+
+}
+
+document.getElementById("login").style.display="none";
+document.getElementById("viewer").style.display="block";
+
+let file=getFile();
+
+let pdfURL=location.origin+location.pathname+file;
+
+document.getElementById("frame").src=
+"https://mozilla.github.io/pdf.js/web/viewer.html?file="+encodeURIComponent(pdfURL)+"#toolbar=0";
+
+}
+
+document.addEventListener("keydown",function(e){
+
+if(e.ctrlKey && (e.key==="s" || e.key==="p")){
+e.preventDefault();
+}
+
+});
+
+</script>
+
+</body>
+</html>
